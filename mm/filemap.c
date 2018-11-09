@@ -902,9 +902,9 @@ EXPORT_SYMBOL(end_page_writeback);
  * After completing I/O on a page, call this routine to update the page
  * flags appropriately
  */
-void page_endio(struct page *page, int rw, int err)
+void page_endio(struct page *page, int op, int err)
 {
-	if (rw == READ) {
+	if (!op_is_write(op)) {
 		if (!err) {
 			SetPageUptodate(page);
 		} else {
@@ -912,7 +912,7 @@ void page_endio(struct page *page, int rw, int err)
 			SetPageError(page);
 		}
 		unlock_page(page);
-	} else { /* rw == WRITE */
+	} else {
 		if (err) {
 			struct address_space *mapping;
 
