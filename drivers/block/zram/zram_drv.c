@@ -53,11 +53,6 @@ static char backend_par_buf[BACKEND_PAR_BUF_SIZE];
 
 /* Module params (documentation at end) */
 static unsigned int num_devices = 1;
-/*
- * Pages that compress to sizes equals or greater than this are stored
- * uncompressed in memory.
- */
-static size_t huge_class_size;
 
 static void zram_free_page(struct zram *zram, size_t index);
 static int zram_bvec_read(struct zram *zram, struct bio_vec *bvec,
@@ -1194,8 +1189,6 @@ static bool zram_meta_alloc(struct zram *zram, u64 disksize)
 		return false;
 	}
 
-	if (!huge_class_size)
-		huge_class_size = zs_huge_class_size(zram->mem_pool);
 	return true;
 }
 
@@ -1381,7 +1374,7 @@ compress_again:
 		return ret;
 	}
 
-	if (comp_len >= huge_class_size)
+	if (comp_len >= max_zpage_size)
 		comp_len = PAGE_SIZE;
 	/*
 	 * handle allocation has 2 paths:
