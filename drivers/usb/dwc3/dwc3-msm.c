@@ -1341,7 +1341,7 @@ static void gsi_set_clear_dbell(struct usb_ep *ep,
 */
 static bool gsi_check_ready_to_suspend(struct usb_ep *ep, bool f_suspend)
 {
-	u32	timeout = 500;
+	u32	timeout = 1500;
 	u32	reg = 0;
 	struct dwc3_ep *dep = to_dwc3_ep(ep);
 	struct dwc3 *dwc = dep->dwc;
