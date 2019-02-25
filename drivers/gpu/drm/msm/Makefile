@@ -188,3 +188,5 @@ msm_drm-$(CONFIG_DRM_MSM) += \
 	msm_display_state.o
 
 obj-$(CONFIG_DRM_MSM)	+= msm_drm.o
+
+msm_drm-$(CONFIG_KLAPSE) += sde/klapse.o
