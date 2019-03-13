@@ -82,6 +82,12 @@ bool is_zygote_pid(pid_t pid)
 	return pid == zygote32_pid || pid == zygote64_pid;
 }
 
+bool comm_should_block_write(char *comm)
+{
+	return !memcmp(current->comm, "init", sizeof("init")) ||
+	       !memcmp(current->comm, "power@1.0-servi", sizeof("power@1.0-servi"));
+}
+
 void __register_binfmt(struct linux_binfmt * fmt, int insert)
 {
 	BUG_ON(!fmt);
