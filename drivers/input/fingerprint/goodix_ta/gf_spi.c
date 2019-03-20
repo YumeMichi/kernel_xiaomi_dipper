@@ -19,7 +19,10 @@
 #include <linux/module.h>
 #include <linux/ioctl.h>
 #include <linux/fs.h>
+#include <linux/cpu_input_boost.h>
+#include <linux/devfreq_boost.h>
 #include <linux/device.h>
+#include <linux/display_state.h>
 #include <linux/input.h>
 #include <linux/clk.h>
 #include <linux/err.h>
@@ -335,6 +338,11 @@ static void gf_kernel_key_input(struct gf_dev *gf_dev, struct gf_key *gf_key)
 	}
 	pr_debug("%s: received key event[%d], key=%d, value=%d\n",
 			__func__, key_input, gf_key->key, gf_key->value);
+
+	if (!is_display_on()) {
+		cpu_input_boost_kick_wake();
+		devfreq_boost_kick_wake(DEVFREQ_MSM_CPUBW);
+	}
 
 	if ((GF_KEY_POWER == gf_key->key || GF_KEY_CAMERA == gf_key->key)
 			&& (gf_key->value == 1)) {
