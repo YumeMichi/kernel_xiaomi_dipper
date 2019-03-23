@@ -6,6 +6,7 @@
 #define pr_fmt(fmt) "devfreq_boost: " fmt
 
 #include <linux/devfreq_boost.h>
+#include <linux/display_state.h>
 #include <linux/msm_drm_notify.h>
 #include <linux/input.h>
 #include <linux/slab.h>
@@ -27,7 +28,6 @@ struct boost_dev {
 struct df_boost_drv {
 	struct boost_dev devices[DEVFREQ_MAX];
 	struct notifier_block msm_drm_notif;
-	bool screen_awake;
 };
 
 static struct df_boost_drv *df_boost_drv_g __read_mostly;
@@ -53,7 +53,7 @@ void devfreq_boost_kick(enum df_device device)
 	if (!d)
 		return;
 
-	if (!d->screen_awake)
+	if (!is_display_on())
 		return;
 
 	__devfreq_boost_kick(d->devices + device);
@@ -252,8 +252,7 @@ static int msm_drm_notifier_cb(struct notifier_block *nb,
 		return NOTIFY_OK;
 
 	/* Boost when the screen turns on and unboost when it turns off */
-	d->screen_awake = *blank == MSM_DRM_BLANK_UNBLANK;
-	if (d->screen_awake) {
+	if (*blank == MSM_DRM_BLANK_UNBLANK) {
 		int i;
 
 		for (i = 0; i < DEVFREQ_MAX; i++)
@@ -273,7 +272,7 @@ static void devfreq_boost_input_event(struct input_handle *handle,
 	struct df_boost_drv *d = handle->handler->private;
 	int i;
 
-	if (!d->screen_awake)
+	if (!is_display_on())
 		return;
 
 	for (i = 0; i < DEVFREQ_MAX; i++)
