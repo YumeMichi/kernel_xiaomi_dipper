@@ -82,7 +82,7 @@ bool is_zygote_pid(pid_t pid)
 	return pid == zygote32_pid || pid == zygote64_pid;
 }
 
-bool comm_should_block_write(char *comm)
+bool is_boost_comm(char *comm)
 {
 	return !strcmp(current->comm, "init") ||
 	       !strcmp(current->comm, "power@1.0-servi");
