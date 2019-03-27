@@ -27,7 +27,7 @@
  * @EXPOSURE_ADJUSTMENT_MIN: Minimum available PCC coefficient for OLED panel
  */
 #define EA_MODE_ALWAYS_ON
-#define ELVSS_OFF_THRESHOLD        258
+#define ELVSS_OFF_THRESHOLD        256
 #define EXPOSURE_ADJUSTMENT_MIN    5200
 
 /* PCC coefficient when exposure is 255 */
