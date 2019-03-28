@@ -24,7 +24,7 @@ comment "Crypto core or helper"
 config CRYPTO_FIPS
 	bool "FIPS 200 compliance"
 	depends on (CRYPTO_ANSI_CPRNG || CRYPTO_DRBG) && !CRYPTO_MANAGER_DISABLE_TESTS
-	depends on MODULE_SIG
+	depends on (MODULE_SIG || !MODULES)
 	help
 	  This options enables the fips boot option which is
 	  required if you want to system to operate in a FIPS 200
@@ -102,6 +102,15 @@ config CRYPTO_KPP
 	select CRYPTO_ALGAPI
 	select CRYPTO_KPP2
 
+config CRYPTO_ACOMP2
+	tristate
+	select CRYPTO_ALGAPI2
+
+config CRYPTO_ACOMP
+	tristate
+	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
+
 config CRYPTO_RSA
 	tristate "RSA algorithm"
 	select CRYPTO_AKCIPHER
@@ -132,12 +141,13 @@ config CRYPTO_MANAGER
 	  cbc(aes).
 
 config CRYPTO_MANAGER2
-	def_tristate CRYPTO_MANAGER || (CRYPTO_MANAGER!=n && CRYPTO_ALGAPI=y)
-	select CRYPTO_AEAD2
-	select CRYPTO_HASH2
-	select CRYPTO_BLKCIPHER2
-	select CRYPTO_AKCIPHER2
-	select CRYPTO_KPP2
+	def_tristate CRYPTO_MANAGER || (CRYPTO_MANAGER!=n && CRYPTO_ALGAPI=y && !CRYPTO_MANAGER_DISABLE_TESTS)
+	select CRYPTO_AEAD2 if !CRYPTO_MANAGER_DISABLE_TESTS
+	select CRYPTO_HASH2 if !CRYPTO_MANAGER_DISABLE_TESTS
+	select CRYPTO_BLKCIPHER2 if !CRYPTO_MANAGER_DISABLE_TESTS
+	select CRYPTO_AKCIPHER2 if !CRYPTO_MANAGER_DISABLE_TESTS
+	select CRYPTO_KPP2 if !CRYPTO_MANAGER_DISABLE_TESTS
+	select CRYPTO_ACOMP2 if !CRYPTO_MANAGER_DISABLE_TESTS
 
 config CRYPTO_USER
 	tristate "Userspace cryptographic algorithm configuration"
@@ -150,7 +160,6 @@ config CRYPTO_USER
 config CRYPTO_MANAGER_DISABLE_TESTS
 	bool "Disable run-time self tests"
 	default y
-	depends on CRYPTO_MANAGER2
 	help
 	  Disable run-time self tests that normally take place at
 	  algorithm registration.
@@ -236,10 +245,14 @@ config CRYPTO_ABLK_HELPER
 	tristate
 	select CRYPTO_CRYPTD
 
+config CRYPTO_SIMD
+	tristate
+	select CRYPTO_CRYPTD
+
 config CRYPTO_GLUE_HELPER_X86
 	tristate
 	depends on X86
-	select CRYPTO_ALGAPI
+	select CRYPTO_BLKCIPHER
 
 config CRYPTO_ENGINE
 	tristate
@@ -437,7 +450,7 @@ config CRYPTO_CRC32C_INTEL
 	  gain performance compared with software implementation.
 	  Module will be crc32c-intel.
 
-config CRYPT_CRC32C_VPMSUM
+config CRYPTO_CRC32C_VPMSUM
 	tristate "CRC32c CRC algorithm (powerpc64)"
 	depends on PPC64 && ALTIVEC
 	select CRYPTO_HASH
@@ -928,14 +941,13 @@ config CRYPTO_AES_X86_64
 config CRYPTO_AES_NI_INTEL
 	tristate "AES cipher algorithms (AES-NI)"
 	depends on X86
+	select CRYPTO_AEAD
 	select CRYPTO_AES_X86_64 if 64BIT
 	select CRYPTO_AES_586 if !64BIT
-	select CRYPTO_CRYPTD
-	select CRYPTO_ABLK_HELPER
 	select CRYPTO_ALGAPI
+	select CRYPTO_BLKCIPHER
 	select CRYPTO_GLUE_HELPER_X86 if 64BIT
-	select CRYPTO_LRW
-	select CRYPTO_XTS
+	select CRYPTO_SIMD
 	help
 	  Use Intel AES-NI instructions for AES algorithm.
 
@@ -1609,6 +1621,7 @@ config CRYPTO_842
 config CRYPTO_LZ4
 	tristate "LZ4 compression algorithm"
 	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
 	select LZ4_COMPRESS
 	select LZ4_DECOMPRESS
 	help
@@ -1617,6 +1630,7 @@ config CRYPTO_LZ4
 config CRYPTO_LZ4HC
 	tristate "LZ4HC compression algorithm"
 	select CRYPTO_ALGAPI
+	select CRYPTO_ACOMP2
 	select LZ4HC_COMPRESS
 	select LZ4_DECOMPRESS
 	help
