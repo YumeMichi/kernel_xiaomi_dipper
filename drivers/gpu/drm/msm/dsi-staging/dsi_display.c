@@ -34,8 +34,6 @@
 #include "dsi_pwr.h"
 #include "sde_dbg.h"
 
-#include "exposure_adjustment.h"
-
 #define to_dsi_display(x) container_of(x, struct dsi_display, host)
 #define INT_BASE_10 10
 #define NO_OVERRIDE -1
@@ -169,10 +167,6 @@ int dsi_display_set_backlight(void *display, u32 bl_lvl)
 
 	bl_scale_ad = panel->bl_config.bl_scale_ad;
 	//bl_temp = (u32)bl_temp * bl_scale_ad / MAX_AD_BL_SCALE_LEVEL;
-
-#ifdef CONFIG_EXPOSURE_ADJUSTMENT
-	bl_temp = ea_panel_calc_backlight(bl_temp);
-#endif
 
 	pr_debug("bl_scale = %u, bl_scale_ad = %u, bl_lvl = %u\n",
 		bl_scale, bl_scale_ad, (u32)bl_temp);
@@ -7070,11 +7064,6 @@ int dsi_display_unprepare(struct dsi_display *display)
 	SDE_EVT32(SDE_EVTLOG_FUNC_EXIT);
 	return rc;
 }
-
-struct dsi_display *get_main_display(void) {
-	return primary_display;
-}
-EXPORT_SYMBOL(get_main_display);
 
 static int __init dsi_display_register(void)
 {
