@@ -85,7 +85,8 @@ bool is_zygote_pid(pid_t pid)
 bool is_boost_comm(char *comm)
 {
 	return !strcmp(current->comm, "init") ||
-	       !strcmp(current->comm, "power@1.0-servi");
+	       !strcmp(current->comm, "power@1.0-servi") ||
+	       !strcmp(current->comm, "thermal-engine");
 }
 
 void __register_binfmt(struct linux_binfmt * fmt, int insert)
