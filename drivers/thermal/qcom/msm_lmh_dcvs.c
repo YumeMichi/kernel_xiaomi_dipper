@@ -637,6 +637,15 @@ static int limits_dcvs_probe(struct platform_device *pdev)
 	if (ret)
 		return ret;
 
+	if (!IS_ENABLED(CONFIG_QTI_THERMAL_LIMITS_DCVS)) {
+		lmh_set_trips(hw, LIMITS_TEMP_HIGH_THRESH_MAX - 1,
+			      LIMITS_TEMP_HIGH_THRESH_MAX);
+		limits_isens_vref_ldo_init(pdev, hw);
+		devm_kfree(&pdev->dev, hw->cdev_data);
+		devm_kfree(&pdev->dev, hw);
+		return 0;
+	}
+
 	/*
 	 * Setup virtual thermal zones for each LMH-DCVS hardware
 	 * The sensor does not do actual thermal temperature readings
