@@ -19,6 +19,9 @@ all:
 	@$(MAKE) -f Makefile O=out $(TARGET_DEFCONFIG)
 	@printf "\e[1;32mBuilding kernel...\e[0m\n"
 	@$(MAKE) -f Makefile O=out
+	@printf "\e[1;32mMaking anykernel...\e[0m\n"
+	./ak2.sh
+	@printf "\e[1;32mDone!\e[0m\n"
 
 fastboot: all
 	@printf "\e[1;32mBooting out/arch/arm64/boot/Image.gz-dtb...\e[0m\n"
