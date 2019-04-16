@@ -11,15 +11,14 @@ default: all
 TARGET_DEFCONFIG := dipper_defconfig
 
 export ARCH=arm64
-export CLANG_TRIPLE=aarch64-linux-gnu-
 export CROSS_COMPILE=aarch64-linux-gnu-
 export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
 all:
 	@printf "\e[1;32mGenerating configuration...\e[0m\n"
-	@$(MAKE) -f Makefile O=out CC=clang $(TARGET_DEFCONFIG)
+	@$(MAKE) -f Makefile O=out $(TARGET_DEFCONFIG)
 	@printf "\e[1;32mBuilding kernel...\e[0m\n"
-	@$(MAKE) -f Makefile O=out CC=clang
+	@$(MAKE) -f Makefile O=out
 
 fastboot: all
 	@printf "\e[1;32mBooting out/arch/arm64/boot/Image.gz-dtb...\e[0m\n"
