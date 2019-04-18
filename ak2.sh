@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="R1-$(date +%F | sed s@-@@g)"
+VERSION="$(cat version)-$(date +%F | sed s@-@@g)"
 
 if [ -e out/arch/arm64/boot/Image.gz-dtb ] ; then
     # Pack AnyKernel2
