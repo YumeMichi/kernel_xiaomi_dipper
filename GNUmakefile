@@ -11,14 +11,15 @@ default: all
 TARGET_DEFCONFIG := dipper_defconfig
 
 export ARCH=arm64
+export CLANG_TRIPLE=aarch64-linux-gnu-
 export CROSS_COMPILE=aarch64-linux-gnu-
 export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
 all:
 	@printf "\e[1;32mGenerating configuration...\e[0m\n"
-	@$(MAKE) -f Makefile O=out $(TARGET_DEFCONFIG)
+	@$(MAKE) -f Makefile O=out CC=clang $(TARGET_DEFCONFIG)
 	@printf "\e[1;32mBuilding kernel...\e[0m\n"
-	@$(MAKE) -f Makefile O=out
+	@$(MAKE) -f Makefile O=out CC=clang
 	@printf "\e[1;32mMaking anykernel...\e[0m\n"
 	./ak2.sh
 	@printf "\e[1;32mDone!\e[0m\n"
