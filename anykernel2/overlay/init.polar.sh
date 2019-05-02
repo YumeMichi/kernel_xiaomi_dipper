@@ -49,7 +49,7 @@ case "$1" in
         gov_param up_rate_limit_us 5000
         gov_param down_rate_limit_us 5000
         # CPU: Boost
-        stune_boost 10
+        stune_boost 15
         boost_duration 32
 
         # DRM: Boost
@@ -78,7 +78,7 @@ case "$1" in
         gov_param up_rate_limit_us 500
         gov_param down_rate_limit_us 20000
         # CPU: Boost
-        stune_boost 15
+        stune_boost 50
         boost_duration 64
 
         # DRM: Boost
@@ -106,7 +106,7 @@ case "$1" in
         big_gov_param up_rate_limit_us 500
         big_gov_param down_rate_limit_us 25000
         # CPU: Boost
-        stune_boost 1
+        stune_boost 60
         boost_duration 125
 
         # DRM: Boost
@@ -134,7 +134,7 @@ case "$1" in
         big_gov_param up_rate_limit_us 400
         big_gov_param down_rate_limit_us 25000
         # CPU: Boost
-        stune_boost 1
+        stune_boost 60
         boost_duration 125
 
         # DRM: Boost
