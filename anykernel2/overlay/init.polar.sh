@@ -17,9 +17,7 @@ boost_duration() { echo $1 > /sys/module/cpu_input_boost/parameters/input_boost_
 boost_timeout() { echo $1 > /sys/module/drm/parameters/frame_boost_timeout; }
 stune_boost() { echo $1 > /sys/module/cpu_input_boost/parameters/dynamic_stune_boost; }
 gpu_min() { echo $1 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq; }
-gpu_max() { echo $1 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq; }
-gpu_gov() { echo "$1" > /sys/class/kgsl/kgsl-3d0/devfreq/governor; }
-power_wq() { echo "$1" > /sys/module/workqueue/parameters/power_efficient; }
+gpu_max() { echo $1 > /sys/class/kgsl/kgsl-3d0/max_gpuclk; }
 
 # Actions
 case "$1" in
@@ -60,10 +58,6 @@ case "$1" in
         # GPU
         gpu_min 180000000
         gpu_max 710000000
-        gpu_gov msm-adreno-tz
-
-        # Workqueue
-        power_wq Y
         ;;
     'balanced')
         # CPU: Little
@@ -93,10 +87,6 @@ case "$1" in
         # GPU
         gpu_min 180000000
         gpu_max 710000000
-        gpu_gov msm-adreno-tz
-
-        # Workqueue
-        power_wq Y
         ;;
     'performance')
         # CPU: Little
@@ -125,10 +115,6 @@ case "$1" in
         # GPU
         gpu_min 342000000
         gpu_max 710000000
-        gpu_gov msm-adreno-tz
-
-        # Workqueue
-        power_wq N
         ;;
     'turbo')
         # CPU: Little
@@ -157,10 +143,6 @@ case "$1" in
         # GPU
         gpu_min 342000000
         gpu_max 825000000
-        gpu_gov msm-adreno-tz
-
-        # Workqueue
-        power_wq N
         ;;
     *)
         echo "Valid actions: [usb] usb_msc, [profiles] battery, balanced, performance, turbo"
