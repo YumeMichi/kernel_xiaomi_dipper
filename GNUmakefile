@@ -8,7 +8,7 @@ endif
 
 default: all
 
-TARGET_DEFCONFIG := dipper_defconfig
+TARGET_DEFCONFIG := equuleus_defconfig
 
 export ARCH=arm64
 export CLANG_TRIPLE=aarch64-linux-gnu-
